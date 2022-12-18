@@ -1,5 +1,8 @@
 package usuarios;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class Post {
     private String data;
     private String hora;
@@ -17,12 +20,14 @@ public class Post {
         return texto;
     }
 
-    public void setData(String data) {
-        this.data = data;
+    public void setData() {
+        Date dataHoraAtual = new Date();
+        this.data = new SimpleDateFormat("dd/MM/yyyy").format(dataHoraAtual);
     }
 
-    public void setHora(String hora) {
-        this.hora = hora;
+    public void setHora() {
+        Date dataHoraAtual = new Date();
+        this.hora = new SimpleDateFormat("HH:mm:ss").format(dataHoraAtual);
     }
 
     public void setTexto(String texto) {

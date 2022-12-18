@@ -1,14 +1,16 @@
 import exceptions.InvalidPasswordException;
 import exceptions.UserNotFoundException;
-import usuarios.Perfil;
+import usuarios.BancoDeUsuarios;
+import usuarios.Usuario;
 import usuarios.Post;
 
 import java.util.Scanner;
 
 public class RedeSocial {
-    static Perfil[] perfis = new Perfil[1000];
-    static int quantPerfis = 0;
-    static int posicaoLogin = 0;
+//    static Perfil[] perfis = new Perfil[1000];
+//    static int quantPerfis = 0;
+//    static int posicaoLogin = 0;
+    static BancoDeUsuarios bancoDeUsuarios = new BancoDeUsuarios();
     static Scanner scan = new Scanner(System.in);
     public static void main(String[] args) {
     RedeSocial novoLogin = new RedeSocial();
@@ -54,39 +56,39 @@ public class RedeSocial {
     }
 
     private static void cadastrarPerfil() {
-        Perfil perfil = new Perfil();
+        Usuario usuario = new Usuario();
         System.out.println("Nome completo: ");
-        perfil.setNome(scan.nextLine());
-        if (perfil.getNome().equals("")) {
+        usuario.setNome(scan.nextLine());
+        if (usuario.getNome().equals("")) {
             System.out.println("Erro! o nome não pode ficar em branco");
             telaInicial();
         }
 
         System.out.println("Login: ");
-        perfil.setLogin(scan.nextLine().toUpperCase());
-        if(quantPerfis > 0) {
-            for(int i = 0; i < quantPerfis; i++) {
-                if (perfil.getLogin().equals(perfis[i].getLogin())) {
+        usuario.setLogin(scan.nextLine().toUpperCase());
+        if(bancoDeUsuarios.getQuantPerfis() > 0) {
+            for(int i = 0; i < bancoDeUsuarios.getQuantPerfis(); i++) {
+                if (usuario.getLogin().equals(bancoDeUsuarios.getTodosPerfis()[i].getLogin())) {
                     System.out.println("login já cadastrado! Faça login ou cadastre com outro nome.");
                     telaInicial();
                 }
             }
         }
 
-        if (perfil.getLogin().equals("")) {
+        if (usuario.getLogin().equals("")) {
             System.out.println("Erro! o login não pode ficar em branco");
             telaInicial();
         }
 
         System.out.println("Senha: ");
-        perfil.setSenha(scan.nextLine());
-        if (perfil.getSenha().equals("")) {
+        usuario.setSenha(scan.nextLine());
+        if (usuario.getSenha().equals("")) {
             System.out.println("Erro! a senha não pode ficar em branco");
             telaInicial();
         }
 
-        perfis[quantPerfis] = perfil;
-        quantPerfis++;
+        bancoDeUsuarios.setTodosPerfis(usuario);
+        bancoDeUsuarios.setQuantPerfis(bancoDeUsuarios.getQuantPerfis()+1);
         System.out.println("USUÁRIO CADASTRADO COM SUCESSO!");
         System.out.println();
     }
@@ -94,7 +96,7 @@ public class RedeSocial {
     private static void telaDeLogin() throws UserNotFoundException, InvalidPasswordException {
         titulo("LOGIN DE USUÁRIO CADASTRADO");
         try {
-            posicaoLogin = verificaLogin();
+            bancoDeUsuarios.setPosicaoLogin(verificaLogin());
         }
         catch (UserNotFoundException e) {
             System.out.println("usuário não encontrado");
@@ -114,9 +116,9 @@ public class RedeSocial {
         String login = scan.nextLine().toUpperCase();
         boolean verificador = false;
         int posicao = 0;
-        if (quantPerfis != 0) {
-            for (int i = 0 ; i < quantPerfis; i++ ) {
-                if (perfis[i].getLogin().equals(login)) {
+        if (bancoDeUsuarios.getQuantPerfis() != 0) {
+            for (int i = 0 ; i < bancoDeUsuarios.getQuantPerfis(); i++ ) {
+                if (bancoDeUsuarios.getTodosPerfis()[i].getLogin().equals(login)) {
                     verificador = true;
                     posicao = i;
                 }
@@ -132,7 +134,7 @@ public class RedeSocial {
     public static void verificaSenha() {
         System.out.println("Senha: ");
         String senha = scan.nextLine();
-        if(perfis[posicaoLogin].getSenha().equals(senha)) {
+        if(bancoDeUsuarios.getTodosPerfis()[bancoDeUsuarios.getPosicaoLogin()].getSenha().equals(senha)) {
             System.out.println("Login realizado com sucesso!");
         } else {
             throw new InvalidPasswordException();
@@ -140,8 +142,8 @@ public class RedeSocial {
     }
 
     private static void telaPosLogin() {
-        Perfil perfilAtual = perfis[posicaoLogin];
-        titulo("BEM VINDO AO SEU PERFIL, " + perfilAtual.getNome().toUpperCase() + "!");
+        Usuario usuarioAtual = bancoDeUsuarios.getTodosPerfis()[bancoDeUsuarios.getPosicaoLogin()];
+        titulo("BEM VINDO AO SEU PERFIL, " + usuarioAtual.getNome().toUpperCase() + "!");
         System.out.println();
         System.out.println("Digite o número da opção desejada:");
         System.out.println("1 - NOVA POSTAGEM");
@@ -152,11 +154,11 @@ public class RedeSocial {
             opcao2 = pegaNumInt();
         }
         if (opcao2 == 1) {
-            Post postagem = perfilAtual.fazerNovaPostagem();
-            perfilAtual.setPostagens(postagem);
+            Post postagem = usuarioAtual.fazerNovaPostagem();
+            usuarioAtual.setPostagens(postagem);
              telaPosLogin();
         } else if (opcao2 == 2) {
-            perfilAtual.verMinhasPostagens();
+            usuarioAtual.verMinhasPostagens();
             telaPosLogin();
         } else {
             System.out.println("Até breve!");

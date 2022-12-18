@@ -1,8 +1,9 @@
 package usuarios;
 
+import java.time.LocalDate;
 import java.util.Scanner;
 
-public class Perfil {
+public class Usuario {
     private String nome;
     private String login;
     private String senha;
@@ -47,12 +48,11 @@ public class Perfil {
     }
 
     public Post fazerNovaPostagem() {
+
         Scanner scan = new Scanner(System.in);
         Post postagem = new Post();
-        System.out.println("Digite a data de hoje: (dd/mm/aaaa)");
-        postagem.setData(scan.nextLine());
-        System.out.println("Digite que horas são: (hh:mm)");
-        postagem.setHora(scan.nextLine());
+        postagem.setData();
+        postagem.setHora();
         System.out.println("Escreva abaixo sua postagem: ");
         postagem.setTexto(scan.nextLine());
         System.out.println("Postagem realizada com sucesso!");
