@@ -3,15 +3,13 @@ import exceptions.UserNotFoundException;
 import usuarios.BancoDeUsuarios;
 import usuarios.Usuario;
 import usuarios.Post;
-
 import java.util.Scanner;
 
 public class RedeSocial {
-//    static Perfil[] perfis = new Perfil[1000];
-//    static int quantPerfis = 0;
-//    static int posicaoLogin = 0;
+
     static BancoDeUsuarios bancoDeUsuarios = new BancoDeUsuarios();
     static Scanner scan = new Scanner(System.in);
+
     public static void main(String[] args) {
     RedeSocial novoLogin = new RedeSocial();
     System.out.println("Entrando na Rede Social...");
@@ -40,7 +38,6 @@ public class RedeSocial {
             titulo("CADASTRO DE NOVO USUÁRIO");
             cadastrarPerfil();
             telaInicial();
-
 
         } else if(primeiraTela == 2) {
             try {
